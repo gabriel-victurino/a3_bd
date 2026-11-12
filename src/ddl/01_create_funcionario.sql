@@ -7,3 +7,13 @@ CREATE TABLE funcionario (
     cod_unidade    INT          NOT NULL,
     CONSTRAINT pk_funcionario PRIMARY KEY (matricula)
 );
+
+ALTER TABLE funcionario
+    ADD CONSTRAINT uk_funcionario_cpf UNIQUE (cpf);
+
+ALTER TABLE funcionario
+    ADD CONSTRAINT ck_funcionario_cpf CHECK (cpf REGEXP '^[0-9]{11}$');
+
+ALTER TABLE funcionario
+    ADD CONSTRAINT ck_funcionario_cargo
+    CHECK (cargo IN ('ENFERMEIRO', 'TECNICO DE COLETA', 'MEDICO', 'ATENDENTE'));
