@@ -4,5 +4,5 @@ CREATE TABLE solicitacao (
     data_solicitacao   DATE         NOT NULL,
     quantidade         INT          NOT NULL,
     situacao VARCHAR(20) NOT NULL,
-    CONSTRAINT pk_solicitacao PRIMARY KEY (cod_solicitacao),
+    CONSTRAINT pk_solicitacao PRIMARY KEY (cod_solicitacao)
 );
