@@ -1,72 +1,18 @@
--- Relatorio: situacao dos doadores para uma nova doacao
-WITH triagens_ordenadas AS (
-    SELECT
-        t.*,
-        ROW_NUMBER() OVER (
-            PARTITION BY t.cod_doador
-            ORDER BY t.data_hora DESC, t.cod_triagem DESC
-        ) AS ordem
-    FROM triagem t
-),
-resumo_doacoes AS (
-    SELECT
-        t.cod_doador,
-        COUNT(d.cod_doacao) AS total_doacoes,
-        MAX(d.data_doacao) AS ultima_doacao
-    FROM triagem t
-    JOIN doacao d ON d.cod_triagem = t.cod_triagem
-    GROUP BY t.cod_doador
-)
+-- Relatorio: situacao dos doadores considerando o intervalo entre doacoes
 SELECT
-    doad.cod_doador,
-    doad.nome AS doador,
-    doad.sexo,
-    doad.tipo_sanguineo,
-    TIMESTAMPDIFF(YEAR, doad.data_nascimento, CURDATE()) AS idade,
-    ut.data_hora AS data_ultima_triagem,
-    ut.resultado AS resultado_ultima_triagem,
-    ut.motivo_inaptidao,
-    COALESCE(rd.total_doacoes, 0) AS total_doacoes,
-    rd.ultima_doacao,
+    dr.cod_doador,
+    dr.nome AS doador,
+    dr.sexo,
+    dr.tipo_sanguineo,
+    MAX(d.data_doacao) AS ultima_doacao,
     CASE
-        WHEN rd.ultima_doacao IS NULL THEN NULL
-        ELSE DATE_ADD(
-            rd.ultima_doacao,
-            INTERVAL IF(doad.sexo = 'M', 60, 90) DAY
-        )
-    END AS proxima_data_permitida,
-    CASE
-        WHEN rd.ultima_doacao IS NULL THEN 0
-        ELSE GREATEST(
-            DATEDIFF(
-                DATE_ADD(
-                    rd.ultima_doacao,
-                    INTERVAL IF(doad.sexo = 'M', 60, 90) DAY
-                ),
-                CURDATE()
-            ),
-            0
-        )
-    END AS dias_restantes,
-    CASE
-        WHEN TIMESTAMPDIFF(YEAR, doad.data_nascimento, CURDATE()) NOT BETWEEN 16 AND 69
-            THEN 'FORA DA FAIXA ETARIA'
-        WHEN ut.cod_triagem IS NULL
-            THEN 'SEM TRIAGEM'
-        WHEN ut.resultado = 'INAPTO'
-            THEN 'NOVA AVALIACAO NECESSARIA'
-        WHEN rd.ultima_doacao IS NULL
-            THEN 'LIBERADO PELO INTERVALO'
-        WHEN CURDATE() >= DATE_ADD(
-            rd.ultima_doacao,
-            INTERVAL IF(doad.sexo = 'M', 60, 90) DAY
-        )
-            THEN 'LIBERADO PELO INTERVALO'
+        WHEN MAX(d.data_doacao) IS NULL THEN 'SEM DOACAO ANTERIOR'
+        WHEN dr.sexo = 'M' AND DATEDIFF(CURDATE(), MAX(d.data_doacao)) >= 60 THEN 'PODE DOAR'
+        WHEN dr.sexo = 'F' AND DATEDIFF(CURDATE(), MAX(d.data_doacao)) >= 90 THEN 'PODE DOAR'
         ELSE 'AGUARDAR INTERVALO'
     END AS situacao
-FROM doador doad
-LEFT JOIN triagens_ordenadas ut
-    ON ut.cod_doador = doad.cod_doador
-    AND ut.ordem = 1
-LEFT JOIN resumo_doacoes rd ON rd.cod_doador = doad.cod_doador
-ORDER BY situacao, proxima_data_permitida, doad.nome;
+FROM doador dr
+LEFT JOIN triagem t ON t.cod_doador = dr.cod_doador
+LEFT JOIN doacao d  ON d.cod_triagem = t.cod_triagem
+GROUP BY dr.cod_doador, dr.nome, dr.sexo, dr.tipo_sanguineo
+ORDER BY dr.nome;
