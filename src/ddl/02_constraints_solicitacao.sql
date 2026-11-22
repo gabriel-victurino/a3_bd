@@ -2,7 +2,7 @@ ALTER TABLE solicitacao
     ADD CONSTRAINT ck_solicitacao_tipo_sanguineo CHECK (tipo_sanguineo IN ('A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'));
 
 ALTER TABLE solicitacao
-    ADD CONSTRAINT ck_solicitacao_tipo_hemocomponente CHECK (tipo_hemocomponente IN ('Concentrado de hemacias', 'Plasma', 'Plaquetas'));
+    ADD CONSTRAINT ck_solicitacao_tipo_hemocomponente CHECK (tipo_hemocomponente IN ('Concentrado de hemácias', 'Plasma', 'Plaquetas'));
 
 ALTER TABLE solicitacao
     ADD CONSTRAINT ck_solicitacao_quantidade CHECK (quantidade_bolsas > 0);
