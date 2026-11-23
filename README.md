@@ -84,44 +84,6 @@ Os INSERTs dependem das chaves estrangeiras e devem ser executados **exatamente 
 7. `01_insert_solicitacao.sql`
 8. `01_insert_bolsa.sql`
 
-Em seguida, todos os `02_update_*.sql` e, por último, todos os `03_delete_*.sql`.
-
-### 4. DQL (`src/dql/`)
-
-As consultas podem ser executadas em qualquer ordem, após o DML.
-
-## ▶️ Como executar
-
-Os scripts foram desenvolvidos para **MySQL 8.0.16 ou superior**.
-
-### 1. Criar o banco
-
-```sql
-CREATE DATABASE hemocentro;
-USE hemocentro;
-```
-
-### 2. DDL (`src/ddl/`)
-
-Executar na ordem dos prefixos:
-
-1. Todos os `01_create_*.sql` (criação das tabelas)
-2. Todos os `02_*.sql` (restrições)
-3. Todos os `03_fk_*.sql` (chaves estrangeiras)
-
-### 3. DML (`src/dml/`)
-
-Os INSERTs dependem das chaves estrangeiras e devem ser executados **exatamente nesta ordem**:
-
-1. `01_insert_unidade_coleta.sql`
-2. `01_insert_funcionario.sql`
-3. `01_insert_doador.sql`
-4. `01_insert_hospital.sql`
-5. `01_insert_triagem.sql`
-6. `01_insert_doacao.sql`
-7. `01_insert_solicitacao.sql`
-8. `01_insert_bolsa.sql`
-
 Em seguida, todos os `02_update_*.sql` e, por último, todos os `03_delete_*.sql` (em ordem alfabética).
 
 ### 4. DQL (`src/dql/`)
