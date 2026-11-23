@@ -90,6 +90,64 @@ Em seguida, todos os `02_update_*.sql` e, por último, todos os `03_delete_*.sql
 
 As consultas podem ser executadas em qualquer ordem, após o DML.
 
+## ▶️ Como executar
+
+Os scripts foram desenvolvidos para **MySQL 8.0.16 ou superior**.
+
+### 1. Criar o banco
+
+```sql
+CREATE DATABASE hemocentro;
+USE hemocentro;
+```
+
+### 2. DDL (`src/ddl/`)
+
+Executar na ordem dos prefixos:
+
+1. Todos os `01_create_*.sql` (criação das tabelas)
+2. Todos os `02_*.sql` (restrições)
+3. Todos os `03_fk_*.sql` (chaves estrangeiras)
+
+### 3. DML (`src/dml/`)
+
+Os INSERTs dependem das chaves estrangeiras e devem ser executados **exatamente nesta ordem**:
+
+1. `01_insert_unidade_coleta.sql`
+2. `01_insert_funcionario.sql`
+3. `01_insert_doador.sql`
+4. `01_insert_hospital.sql`
+5. `01_insert_triagem.sql`
+6. `01_insert_doacao.sql`
+7. `01_insert_solicitacao.sql`
+8. `01_insert_bolsa.sql`
+
+Em seguida, todos os `02_update_*.sql` e, por último, todos os `03_delete_*.sql` (em ordem alfabética).
+
+### 4. DQL (`src/dql/`)
+
+As consultas podem ser executadas em qualquer ordem, após o DML.
+
+### Execução completa pelo terminal (Linux/WSL)
+
+```bash
+mysql -u root -p -e "DROP DATABASE IF EXISTS hemocentro; CREATE DATABASE hemocentro;"
+
+cat src/ddl/01_*.sql src/ddl/02_*.sql src/ddl/03_*.sql \
+    src/dml/01_insert_unidade_coleta.sql src/dml/01_insert_funcionario.sql \
+    src/dml/01_insert_doador.sql src/dml/01_insert_hospital.sql \
+    src/dml/01_insert_triagem.sql src/dml/01_insert_doacao.sql \
+    src/dml/01_insert_solicitacao.sql src/dml/01_insert_bolsa.sql \
+    src/dml/02_*.sql src/dml/03_*.sql \
+  | mysql -u root -p hemocentro
+```
+
+## 📐 Modelagem
+
+O Diagrama Entidade-Relacionamento está em [`docs/der_conceitual.png`](docs/der_conceitual.png).
+
+> **Observação (Ubuntu/WSL):** em instalações novas do MySQL no Ubuntu, o usuário `root` é autenticado pelo sistema e não aceita senha (erro `1698 Access denied`). Nesse caso, substitua `mysql -u root -p` por `sudo mysql` nos dois comandos acima.
+
 ## 👥 Integrantes
 
 
