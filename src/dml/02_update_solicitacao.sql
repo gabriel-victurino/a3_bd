@@ -1,9 +1,9 @@
--- Solicitacao 53 teve sua urgencia alterada para urgente
+-- Solicitação 2 teve sua urgência alterada para urgente
 UPDATE solicitacao
 SET nivel_urgencia = 'URGENTE'
-WHERE cod_solicitacao = 53;
+WHERE cod_solicitacao = 2;
 
--- Solicitacao 54 foi atendida pelo hemocentro
+-- Solicitação 3 foi atendida pelo hemocentro
 UPDATE solicitacao
 SET situacao = 'ATENDIDA'
-WHERE cod_solicitacao = 54;
+WHERE cod_solicitacao = 3;
