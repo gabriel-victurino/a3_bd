@@ -107,6 +107,7 @@ cat src/ddl/01_*.sql src/ddl/02_*.sql src/ddl/03_*.sql \
 ## 📐 Modelagem
 
 O Diagrama Entidade-Relacionamento está em [`docs/der_conceitual.png`](docs/der_conceitual.png).
+O Diagrama UML está em [`docs/diagrama_uml.png`](docs/diagrama_uml.png).
 
 > **Observação (Ubuntu/WSL):** em instalações novas do MySQL no Ubuntu, o usuário `root` é autenticado pelo sistema e não aceita senha (erro `1698 Access denied`). Nesse caso, substitua `mysql -u root -p` por `sudo mysql` nos dois comandos acima.
 
